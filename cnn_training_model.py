@@ -1,24 +1,23 @@
 import os
 import warnings
 import cv2
-import keras
+#import keras
 import matplotlib.pyplot as plt
 import matplotlib.style as style
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-#import keras
-#from tensorflow import keras
+from tensorflow import keras
 from PIL import Image
 #from tensorflow.keras import models, layers, optimizers
-from tf.keras import models, layers, optimizers
-from tf.keras.applications.vgg16 import VGG16
-from tf.keras.callbacks import EarlyStopping, ModelCheckpoint
-from tf.keras.layers import Dense, Dropout, Flatten
-from tf.keras.models import Model
-from tf.keras.preprocessing import image as image_utils
-from tf.keras.preprocessing.image import ImageDataGenerator
-from tf.keras.utils import to_categorical
+from tensorflow.keras import models, layers, optimizers
+from keras.applications.vgg16 import VGG16
+from keras.callbacks import EarlyStopping, ModelCheckpoint
+from keras.layers import Dense, Dropout, Flatten
+from keras.models import Model
+from keras.preprocessing import image as image_utils
+from keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.utils import to_categorical
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
 
