@@ -25,7 +25,8 @@ pip install pandas
 
 pip install scikit-learn
 
-Clone the project
+Clone the project.
+
 Prepare training data by using print_images.py
 
 Run training: python3 cnn_training_model.py
