@@ -3,8 +3,7 @@ cnn_training_model.py - code for training the model for gesture prediction
 
 predictor.py - code for gesture perdiction 
 
-print_images.py - code creaiting images (new gestures) for training 
-
+print_images.py - code for creaiting images (new gestures) for training 
 
 
 ## Set up
