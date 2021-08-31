@@ -11,11 +11,17 @@ Create python virtual environment and install following dependencies:
 yum install mesa-libGL 
 
 pip install tensorflow
+
 pip install numpy
+
 pip install keras
+
 pip install opencv-python
+
 pip install matplotlib
+
 pip install pandas
+
 pip install scikit-learn
 
 Clone the project
