@@ -1,13 +1,14 @@
 import cv2
+import time
 import numpy as np
 
 background = None
 accumulated_weight = 0.5
 
 ROI_top = 100
-ROI_bottom = 300
-ROI_right = 150
-ROI_left = 350
+ROI_bottom = 950 #
+ROI_right = 200
+ROI_left = 750 #width
 
 
 def cal_accum_avg(frame, accumulated_weight):
@@ -29,7 +30,7 @@ def segment_hand(frame, threshold=25):
     _ , thresholded = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY)
 
     # Grab the external contours for the image
-    image, contours, hierarchy = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     if len(contours) == 0:
         return None
@@ -43,7 +44,7 @@ def segment_hand(frame, threshold=25):
 cam = cv2.VideoCapture(0)
 
 num_frames = 0
-element = 10
+element = 2
 num_imgs_taken = 0
 
 while True:
@@ -59,11 +60,11 @@ while True:
     gray_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     gray_frame = cv2.GaussianBlur(gray_frame, (9, 9), 0)
 
-    if num_frames < 60:
+    if num_frames < 100:
         cal_accum_avg(gray_frame, accumulated_weight)
         if num_frames <= 59:
             
-            cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT", (80, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,0,255), 2)
+            cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,0,255), 2)
             #cv2.imshow("Sign Detection",frame_copy)
          
     #Time to configure the hand specifically into the ROI...
@@ -71,7 +72,7 @@ while True:
 
         hand = segment_hand(gray_frame)
         
-        cv2.putText(frame_copy, "Adjust hand...Gesture for" + str(element), (200, 400), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+        cv2.putText(frame_copy, "Adjust hand...Gesture for" + str(element), (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
         
         # Checking if hand is actually detected by counting number of contours detected...
         if hand is not None:
@@ -84,7 +85,7 @@ while True:
             cv2.putText(frame_copy, str(num_frames)+"For" + str(element), (70, 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
             # Also display the thresholded image
-            cv2.imshow("Thresholded Hand Image", thresholded)
+            cv2.imshow("Thresholded Hand Image=>", thresholded)
     
     else: 
         
@@ -105,10 +106,11 @@ while True:
             cv2.putText(frame_copy, str(num_imgs_taken) + 'images' +"For" + str(element), (200, 400), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
             
             # Displaying the thresholded image
-            cv2.imshow("Thresholded Hand Image", thresholded)
+            cv2.imshow("***Thresholded Hand Image***", thresholded)
             if num_imgs_taken <= 300:
                 #cv2.imwrite(r"D:\\gesture\\train\\"+str(element)+"\\" + str(num_imgs_taken+300) + '.jpg', thresholded)
-                cv2.imwrite(r"D:\\gesture\\x"+"\\" + str(num_imgs_taken) + '.jpg', thresholded)
+                #cv2.imwrite(r"D:\\gesture\\x"+"\\" + str(num_imgs_taken) + '.jpg', thresholded)
+                cv2.imwrite(r"../images/train/" + str(element) + "/gesture"  + str(time.time()) + '.jpg', thresholded)
             else:
                 break
             num_imgs_taken +=1
@@ -116,7 +118,7 @@ while True:
             cv2.putText(frame_copy, 'No hand detected...', (200, 400), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
     # Drawing ROI on frame copy
-    cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255,128,0), 3)
+    cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255,255,0), 3)
     
     cv2.putText(frame_copy, "DataFlair hand sign recognition_ _ _", (10, 20), cv2.FONT_ITALIC, 0.5, (51,255,51), 1)
     
