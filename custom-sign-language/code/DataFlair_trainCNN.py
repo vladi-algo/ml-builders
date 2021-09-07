@@ -60,7 +60,7 @@ model.add(Dense(128,activation ="relu"))
 model.add(Dense(128,activation ="relu"))
 #model.add(Dropout(0.3))
 #model.add(Dense(10,activation ="softmax")) TODO return to 10
-model.add(Dense(3,activation ="softmax"))
+model.add(Dense(6,activation ="softmax"))
 
 # In[23]:
 
