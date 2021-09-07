@@ -1,22 +1,23 @@
 import tensorflow as tf
-from tensorflow import keras
-from keras.models import Sequential
-from keras.layers import Activation, Dense, Flatten, BatchNormalization, Conv2D, MaxPool2D, Dropout
-from keras.optimizers import Adam, SGD
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Activation, Dense, Flatten, BatchNormalization, Conv2D, MaxPool2D, Dropout
+from tensorflow.keras.optimizers import Adam, SGD
 from keras.metrics import categorical_crossentropy
-from keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import itertools
 import random
 import warnings
 import numpy as np
 import cv2
-from keras.callbacks import ReduceLROnPlateau
-from keras.callbacks import ModelCheckpoint, EarlyStopping
+from tensorflow.keras.callbacks import ReduceLROnPlateau
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
+import matplotlib.pyplot as plt
+from utils.definitions import word_dict
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
-train_path = r'D:\gesture\train'
-test_path = r'D:\gesture\test'
+train_path = r'../images/train'
+test_path = r'../images/test'
 
 train_batches = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input).flow_from_directory(directory=train_path, target_size=(64,64), class_mode='categorical', batch_size=10,shuffle=True)
 test_batches = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input).flow_from_directory(directory=test_path, target_size=(64,64), class_mode='categorical', batch_size=10, shuffle=True)
@@ -36,7 +37,7 @@ def plotImages(images_arr):
     plt.show()
 
 
-plotImages(imgs)
+#plotImages(imgs)
 print(imgs.shape)
 print(labels)
 
@@ -58,8 +59,8 @@ model.add(Dense(128,activation ="relu"))
 #model.add(Dropout(0.2))
 model.add(Dense(128,activation ="relu"))
 #model.add(Dropout(0.3))
-model.add(Dense(10,activation ="softmax"))
-
+#model.add(Dense(10,activation ="softmax")) TODO return to 10
+model.add(Dense(3,activation ="softmax"))
 
 # In[23]:
 
@@ -75,7 +76,7 @@ reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=1, min_lr
 early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=0, mode='auto')
 
 
-history2 = model.fit(train_batches, epochs=10, callbacks=[reduce_lr, early_stop],  validation_data = test_batches)#, checkpoint])
+history2 = model.fit(train_batches, epochs=50, callbacks=[reduce_lr, early_stop],  validation_data = test_batches)#, checkpoint])
 imgs, labels = next(train_batches) # For getting next batch of imgs...
 
 imgs, labels = next(test_batches) # For getting next batch of imgs...
@@ -83,14 +84,13 @@ scores = model.evaluate(imgs, labels, verbose=0)
 print(f'{model.metrics_names[0]} of {scores[0]}; {model.metrics_names[1]} of {scores[1]*100}%')
 
 
-#model.save('best_model_dataflair.h5')
-model.save('best_model_dataflair3.h5')
+model.save('../model/best_model_custom_gestures.h5')
 
 print(history2.history)
 
 imgs, labels = next(test_batches)
 
-model = keras.models.load_model(r"best_model_dataflair3.h5")
+model = tf.keras.models.load_model(r"../model/best_model_custom_gestures.h5")
 
 scores = model.evaluate(imgs, labels, verbose=0)
 print(f'{model.metrics_names[0]} of {scores[0]}; {model.metrics_names[1]} of {scores[1]*100}%')
@@ -101,7 +101,7 @@ scores #[loss, accuracy] on test data...
 model.metrics_names
 
 
-word_dict = {0:'One',1:'Ten',2:'Two',3:'Three',4:'Four',5:'Five',6:'Six',7:'Seven',8:'Eight',9:'Nine'}
+#word_dict = {0:'One',1:'Ten',2:'Two',3:'Three',4:'Four',5:'Five',6:'Six',7:'Seven',8:'Eight',9:'Nine'}
 
 predictions = model.predict(imgs, verbose=0)
 print("predictions on a small set of test data--")

@@ -1,19 +1,20 @@
+from utils.definitions import word_dict
 import numpy as np
 import cv2
-import keras
+#import keras
+from tensorflow.keras import models
 from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
 
-model = keras.models.load_model(r"C:\Users\abhij\best_model_dataflair3.h5")
+model = models.load_model(r"../model/best_model_custom_gestures.h5")
 
 background = None
 accumulated_weight = 0.5
 
 ROI_top = 100
-ROI_bottom = 300
-ROI_right = 150
-ROI_left = 350
-
+ROI_bottom = 950 #
+ROI_right = 200
+ROI_left = 750 #width
 
 
 def cal_accum_avg(frame, accumulated_weight):
@@ -37,7 +38,7 @@ def segment_hand(frame, threshold=25):
     _ , thresholded = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY)
     
     #Fetching contours in the frame (These contours can be of hand or any other object in foreground) ...
-    image, contours, hierarchy = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # If length of contours list = 0, means we didn't get any contours...
     if len(contours) == 0:
@@ -70,7 +71,7 @@ while True:
         
         cal_accum_avg(gray_frame, accumulated_weight)
         
-        cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT", (80, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,0,255), 2)
+        cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT!", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,0,255), 2)
     
     else: 
         # segmenting the hand region
@@ -92,7 +93,8 @@ while True:
             thresholded = np.reshape(thresholded, (1,thresholded.shape[0],thresholded.shape[1],3))
             
             pred = model.predict(thresholded)
-            cv2.putText(frame_copy, word_dict[np.argmax(pred)], (170, 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+            print (pred)
+            cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
             
     # Draw ROI on frame_copy
     cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255,128,0), 3)
