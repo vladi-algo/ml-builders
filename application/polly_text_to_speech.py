@@ -1,3 +1,8 @@
+# 
+# Usage:
+# $ python3 polly_text_to_speech.py "my message free text comes here"
+# 
+
 import boto3
 import os
 import sys
