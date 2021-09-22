@@ -1,4 +1,4 @@
-from utils.definitions import word_dict
+from utils.definitions import word_dict,PREDICTION_THRESHOLD
 import numpy as np
 import cv2
 #import keras
@@ -94,7 +94,8 @@ while True:
             pred = model.predict(thresholded)
             # print all predictions per gesture
             print(pred)
-            if pred[np.argmax(pred)] >= PREDICTION_THRESHOLD:
+            x_axis = pred[0]
+            if len(x_axis) > 0 and x_axis[np.argmax(x_axis)] >= PREDICTION_THRESHOLD:
                 cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
             
     # Draw ROI on frame_copy
