@@ -5,6 +5,8 @@ import cv2
 from tensorflow.keras import models
 from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
+import boto3
+import os
 
 model = models.load_model(r"../model/best_model_custom_gestures.h5")
 
@@ -16,6 +18,21 @@ ROI_bottom = 950 #
 ROI_right = 200
 ROI_left = 750 #width
 
+def text_to_polly_sound(input_text):
+    polly_client = boto3.client('polly')
+    
+    response = polly_client.synthesize_speech(VoiceId='Matthew',
+                                            Engine='neural',
+                                            OutputFormat='mp3', 
+                                            Text = input_text)
+
+    file = open('speech.mp3', 'wb')
+    file.write(response['AudioStream'].read())
+    file.close()
+
+    dir_path = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\ ") + '/speech.mp3'
+
+    os.system(("afplay " + dir_path))
 
 def cal_accum_avg(frame, accumulated_weight):
 
