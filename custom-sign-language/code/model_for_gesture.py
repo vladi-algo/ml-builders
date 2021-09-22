@@ -76,7 +76,6 @@ while True:
     else: 
         # segmenting the hand region
         hand = segment_hand(gray_frame)
-        
 
         # Checking if we are able to detect the hand...
         if hand is not None:
@@ -93,8 +92,10 @@ while True:
             thresholded = np.reshape(thresholded, (1,thresholded.shape[0],thresholded.shape[1],3))
             
             pred = model.predict(thresholded)
-            print (pred)
-            cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+            # print all predictions per gesture
+            print(pred)
+            if pred[np.argmax(pred)] >= PREDICTION_THRESHOLD:
+                cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
             
     # Draw ROI on frame_copy
     cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255,128,0), 3)

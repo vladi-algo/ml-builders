@@ -11,4 +11,6 @@ word_dict = {0:'Zero',
  10:'Ten'
  }
 
+PREDICTION_THRESHOLD = 0.75
+
 
