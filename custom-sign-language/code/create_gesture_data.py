@@ -11,10 +11,11 @@ accumulated_weight = 0.5
 # num_frames = 0
 # num_imgs_taken = 0
 
+
 ROI_top = 100
-ROI_bottom = 950  #
-ROI_right = 200
-ROI_left = 750  # width
+ROI_bottom = 1000 #height
+ROI_right = 100
+ROI_left = 750 #width
 
 
 def cal_accum_avg(frame, accumulated_weight):
