@@ -88,15 +88,15 @@ def generate_gestures(argv):
         gray_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
         gray_frame = cv2.GaussianBlur(gray_frame, (9, 9), 0)
 
-        if num_frames < 100:
+        if num_frames < 200:
             cal_accum_avg(gray_frame, accumulated_weight)
-            if num_frames <= 99:
+            if num_frames <= 199:
                 cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
                             (0, 0, 255), 2)
                 # cv2.imshow("Sign Detection",frame_copy)
 
         # Time to configure the hand specifically into the ROI...
-        elif num_frames <= 300:
+        elif num_frames <= 400:
 
             hand = segment_hand(gray_frame)
 
@@ -136,8 +136,8 @@ def generate_gestures(argv):
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
                 # Displaying the thresholded image
-                cv2.imshow("***Thresholded Hand Image***", thresholded)
-                if num_imgs_taken <= 500:
+                cv2.imshow("***Taking hresholded Hand Image***", thresholded)
+                if num_imgs_taken <= 800:
                     # cv2.imwrite(r"D:\\gesture\\train\\"+str(element)+"\\" + str(num_imgs_taken+300) + '.jpg', thresholded)
                     # cv2.imwrite(r"D:\\gesture\\x"+"\\" + str(num_imgs_taken) + '.jpg', thresholded)
                     cv2.imwrite(r"../images/" + group + "/" + str(element) + "/gesture" + str(time.time()) + '.jpg', thresholded)

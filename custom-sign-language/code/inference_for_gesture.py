@@ -84,7 +84,7 @@ while True:
     gray_frame = cv2.GaussianBlur(gray_frame, (9, 9), 0)
 
 
-    if num_frames < 70:
+    if num_frames < 150:
         
         cal_accum_avg(gray_frame, accumulated_weight)
         
@@ -115,9 +115,10 @@ while True:
             pred = model.predict(thresholded)
             # print all predictions per gesture
             print(pred)
-            #x_axis = pred[0]
-            #if len(x_axis) > 0 and x_axis[np.argmax(x_axis)] >= PREDICTION_THRESHOLD:
-            cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+            x_axis = pred[0]
+            if len(x_axis) > 0 and x_axis[np.argmax(x_axis)] >= PREDICTION_THRESHOLD:
+                cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+                #call to the polly 
             
     # Draw ROI on frame_copy
     cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255,128,0), 3)

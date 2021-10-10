@@ -9,6 +9,7 @@ import random
 import warnings
 import numpy as np
 import cv2
+import datetime
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 import matplotlib.pyplot as plt
@@ -74,9 +75,12 @@ early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=
 model.compile(optimizer=SGD(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=1, min_lr=0.0005)
 early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=0, mode='auto')
+log_dir = "./logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 
-history2 = model.fit(train_batches, epochs=50, callbacks=[reduce_lr, early_stop],  validation_data = test_batches)#, checkpoint])
+
+history2 = model.fit(train_batches, epochs=50, callbacks=[reduce_lr, early_stop,tensorboard],  validation_data = test_batches)#, checkpoint])
 imgs, labels = next(train_batches) # For getting next batch of imgs...
 
 imgs, labels = next(test_batches) # For getting next batch of imgs...
