@@ -7,9 +7,16 @@ from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
 import boto3
 import os
+import time
+import pygame
+import pygame._sdl2 as sdl2
+
+
 
 model = models.load_model(r"../model/best_model_custom_gestures.h5")
 polly_client = boto3.client('polly')
+pygame.mixer.pre_init(devicename="BlackHole 16ch")
+pygame.mixer.init()
 
 background = None
 accumulated_weight = 0.5
@@ -33,7 +40,9 @@ def text_to_polly_sound(input_text):
     file.close()
 
     dir_path = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\ ") + '/speech.mp3'
-    os.system(("afplay " + dir_path))
+    pygame.mixer.music.load("speech.mp3")
+    pygame.mixer.music.play()
+    #os.system(("afplay " + dir_path))
 
 def cal_accum_avg(frame, accumulated_weight):
 
@@ -121,6 +130,7 @@ while True:
                 cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
                 #call to the polly
                 text_to_polly_sound(word_dict[np.argmax(pred)])
+                time.sleep(2)
 
             
     # Draw ROI on frame_copy
