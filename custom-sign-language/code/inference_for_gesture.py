@@ -9,6 +9,7 @@ import boto3
 import os
 
 model = models.load_model(r"../model/best_model_custom_gestures.h5")
+polly_client = boto3.client('polly')
 
 background = None
 accumulated_weight = 0.5
@@ -19,8 +20,7 @@ ROI_right = 100
 ROI_left = 750 #width
 
 def text_to_polly_sound(input_text):
-    polly_client = boto3.client('polly')
-    
+
     response = polly_client.synthesize_speech(VoiceId='Matthew',
                                             Engine='neural',
                                             OutputFormat='mp3', 
@@ -31,7 +31,6 @@ def text_to_polly_sound(input_text):
     file.close()
 
     dir_path = os.path.dirname(os.path.realpath(__file__)).replace(" ", "\ ") + '/speech.mp3'
-
     os.system(("afplay " + dir_path))
 
 def cal_accum_avg(frame, accumulated_weight):
@@ -96,7 +95,7 @@ while True:
 
         # Checking if we are able to detect the hand...
         if hand is not None:
-            
+
             thresholded, hand_segment = hand
 
             # Drawing contours around hand segment
@@ -118,7 +117,9 @@ while True:
             x_axis = pred[0]
             if len(x_axis) > 0 and x_axis[np.argmax(x_axis)] >= PREDICTION_THRESHOLD:
                 cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
-                #call to the polly 
+                #call to the polly
+                text_to_polly_sound(word_dict[np.argmax(pred)])
+
             
     # Draw ROI on frame_copy
     cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255,128,0), 3)
