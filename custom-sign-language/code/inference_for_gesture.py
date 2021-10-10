@@ -19,13 +19,15 @@ ROI_bottom = 1000 #height
 ROI_right = 100
 ROI_left = 750 #width
 
+
+
+
 def text_to_polly_sound(input_text):
 
     response = polly_client.synthesize_speech(VoiceId='Matthew',
-                                            Engine='neural',
-                                            OutputFormat='mp3', 
-                                            Text = input_text)
-
+                                              Engine='neural',
+                                              OutputFormat='mp3',
+                                              Text=input_text)
     file = open('speech.mp3', 'wb')
     file.write(response['AudioStream'].read())
     file.close()
@@ -129,7 +131,7 @@ while True:
 
     # Display the frame with segmented hand
 
-    cv2.putText(frame_copy, "DataFlair hand sign recognition_ _ _", (10, 20), cv2.FONT_ITALIC, 0.5, (51,255,51), 1)
+    cv2.putText(frame_copy, "Hand sign recognition_ _ _", (10, 20), cv2.FONT_ITALIC, 0.7, (51,255,51), 1)
     cv2.imshow("Sign Detection", frame_copy)
 
 
