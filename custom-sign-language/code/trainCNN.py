@@ -94,7 +94,7 @@ print(history2.history)
 
 imgs, labels = next(test_batches)
 
-model = tf.keras.models.load_model(r"../model/best_model_custom_gestures.h5")
+model = tf.keras.models.load_model(r"../model/model_custom_gestures.h5")
 
 scores = model.evaluate(imgs, labels, verbose=0)
 print(f'{model.metrics_names[0]} of {scores[0]}; {model.metrics_names[1]} of {scores[1]*100}%')
