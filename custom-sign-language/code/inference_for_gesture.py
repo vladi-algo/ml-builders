@@ -130,7 +130,7 @@ while True:
                 cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
                 #call to the polly
                 text_to_polly_sound(word_dict[np.argmax(pred)])
-                time.sleep(2)
+                #time.sleep(1)
 
             
     # Draw ROI on frame_copy
