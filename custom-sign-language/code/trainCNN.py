@@ -79,8 +79,8 @@ log_dir = "./logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 
-
-history2 = model.fit(train_batches, epochs=50, callbacks=[reduce_lr, early_stop,tensorboard],  validation_data = test_batches)#, checkpoint])
+#history2 = model.fit(train_batches, epochs=50, callbacks=[reduce_lr, early_stop,tensorboard],  validation_data = test_batches)#, checkpoint])
+history2 = model.fit(train_batches, epochs=4, callbacks=[reduce_lr,tensorboard],  validation_data = test_batches)#, checkpoint])
 imgs, labels = next(train_batches) # For getting next batch of imgs...
 
 imgs, labels = next(test_batches) # For getting next batch of imgs...
@@ -94,7 +94,7 @@ print(history2.history)
 
 imgs, labels = next(test_batches)
 
-model = tf.keras.models.load_model(r"../model/model_custom_gestures.h5")
+model = tf.keras.models.load_model(r"../model/best_model_custom_gestures.h5")
 
 scores = model.evaluate(imgs, labels, verbose=0)
 print(f'{model.metrics_names[0]} of {scores[0]}; {model.metrics_names[1]} of {scores[1]*100}%')

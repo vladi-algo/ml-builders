@@ -11,8 +11,6 @@ import time
 import pygame
 import pygame._sdl2 as sdl2
 
-
-
 model = models.load_model(r"../model/best_model_custom_gestures.h5")
 polly_client = boto3.client('polly')
 pygame.mixer.pre_init(devicename="BlackHole 16ch")
@@ -94,7 +92,7 @@ while True:
     gray_frame = cv2.GaussianBlur(gray_frame, (9, 9), 0)
 
 
-    if num_frames < 150:
+    if num_frames < 200:
         
         cal_accum_avg(gray_frame, accumulated_weight)
         
@@ -115,7 +113,7 @@ while True:
             #(white / black)
             named_window = "Thesholded Hand Image-B/W"
             cv2.namedWindow(named_window)
-            cv2.moveWindow(named_window, 850,100)
+            cv2.moveWindow(named_window, 850,80)
             cv2.imshow(named_window, thresholded)
             
             thresholded = cv2.resize(thresholded, (64, 64))
@@ -127,7 +125,7 @@ while True:
             print(pred)
             x_axis = pred[0]
             if len(x_axis) > 0 and x_axis[np.argmax(x_axis)] >= PREDICTION_THRESHOLD:
-                cv2.putText(frame_copy, "PREDICTED gesture:" + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+                cv2.putText(frame_copy, "PREDICTED GESTURE: " + word_dict[np.argmax(pred)], (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
                 #call to the polly
                 text_to_polly_sound(word_dict[np.argmax(pred)])
                 #time.sleep(1)

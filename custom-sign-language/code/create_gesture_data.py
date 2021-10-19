@@ -137,7 +137,7 @@ def generate_gestures(argv):
 
                 # Displaying the thresholded image
                 cv2.imshow("***Taking hresholded Hand Image***", thresholded)
-                if num_imgs_taken <= 800:
+                if num_imgs_taken <= 400:
                     # cv2.imwrite(r"D:\\gesture\\train\\"+str(element)+"\\" + str(num_imgs_taken+300) + '.jpg', thresholded)
                     # cv2.imwrite(r"D:\\gesture\\x"+"\\" + str(num_imgs_taken) + '.jpg', thresholded)
                     cv2.imwrite(r"../images/" + group + "/" + str(element) + "/gesture" + str(time.time()) + '.jpg', thresholded)
