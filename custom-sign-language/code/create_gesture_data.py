@@ -67,6 +67,12 @@ def init(argv):
             sys.exit(-1)
     return (element, group)
 
+def move_window(text):
+    named_window = text
+    cv2.namedWindow(named_window)
+    cv2.moveWindow(named_window, 850, 120)
+    return named_window
+
 
 def generate_gestures(argv):
     element, group = init(argv)
@@ -85,14 +91,14 @@ def generate_gestures(argv):
         frame_copy = frame.copy()
 
         roi = frame[ROI_top:ROI_bottom, ROI_right:ROI_left]
-
+        # convert to B/W
         gray_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
         gray_frame = cv2.GaussianBlur(gray_frame, (9, 9), 0)
 
         if num_frames < 200:
             cal_accum_avg(gray_frame, accumulated_weight)
             if num_frames <= 199:
-                cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
+                cv2.putText(frame_copy, "FETCHING BACKGROUND. PLEASE WAIT...", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
                             (0, 0, 255), 2)
                 # cv2.imshow("Sign Detection",frame_copy)
 
@@ -101,17 +107,14 @@ def generate_gestures(argv):
 
             hand = segment_hand(gray_frame)
 
-            cv2.putText(frame_copy, "Adjust hand...Gesture for " + str(element), (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                        (0, 0, 255), 2)
+            #cv2.putText(frame_copy, "Adjust hand...Gesture for " + str(element), (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1,
+            #            (0, 0, 255), 2)
 
             # Checking if hand is actually detected by counting number of contours detected...
             if hand is not None:
                 thresholded, hand_segment = hand
 
-                # (white / black)
-                named_window = "Threshold Hand Image-B/W"
-                cv2.namedWindow(named_window)
-                cv2.moveWindow(named_window, 850, 120)
+                named_window = move_window("Adjusting hand gesture...")
 
                 # Draw contours around hand segment
                 cv2.drawContours(frame_copy, [hand_segment + (ROI_right, ROI_top)], -1, (255, 0, 0), 1)
@@ -137,13 +140,16 @@ def generate_gestures(argv):
                 # Drawing contours around hand segment
                 cv2.drawContours(frame_copy, [hand_segment + (ROI_right, ROI_top)], -1, (255, 0, 0), 1)
 
-                cv2.putText(frame_copy, str(num_frames), (70, 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                #print total number of frames
+                #cv2.putText(frame_copy, str(num_frames), (70, 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 # cv2.putText(frame_copy, str(num_frames)+"For" + str(element), (70, 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
-                cv2.putText(frame_copy, str(num_imgs_taken) + 'images' + "For gesture:" + str(element), (60, 80),
+                #print total number of taken images
+                cv2.putText(frame_copy, str(num_imgs_taken) + ' images' + " for gesture: " + str(element), (60, 80),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-                # Displaying the thresholded image
-                cv2.imshow("***Taking threshold Hand Image***", thresholded)
+                named_window = move_window("Now is taking hand image ...")
+
+                cv2.imshow(named_window, thresholded)
                 if num_imgs_taken <= 300:
                     cv2.imwrite(r"../images/" + group + "/" + str(element) + "/gesture" + str(time.time()) + '.jpg',
                                 thresholded)

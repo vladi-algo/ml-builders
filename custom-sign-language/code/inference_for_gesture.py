@@ -26,7 +26,7 @@ ROI_bottom = 900  # height 1000
 ROI_right = 100
 ROI_left = 700  # width 750
 
-
+#Joanna
 def text_to_polly_sound(input_text):
     response = polly_client.synthesize_speech(VoiceId='Matthew',
                                               Engine='neural',
@@ -95,9 +95,8 @@ while True:
 
         cal_accum_avg(gray_frame, accumulated_weight)
 
-        cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
+        cv2.putText(frame_copy, "FETCHING BACKGROUND. PLEASE WAIT...", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
                     (0, 0, 255), 2)
-
     else:
         # segmenting the hand region
         hand = segment_hand(gray_frame)
@@ -155,7 +154,7 @@ while True:
 
     # Display the frame with segmented hand
 
-    cv2.putText(frame_copy, "Hand sign recognition...", (10, 20), cv2.FONT_ITALIC, 0.7, (28, 229, 28), 1)
+    cv2.putText(frame_copy, "Hand sign recognition...", (10, 20), cv2.FONT_ITALIC, 0.7, (50, 50, 50), 1)
     cv2.imshow("Sign Detection", frame_copy)
 
     # Close windows with Esc
