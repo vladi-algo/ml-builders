@@ -22,9 +22,9 @@ background = None
 accumulated_weight = 0.5
 
 ROI_top = 100
-ROI_bottom = 1000  # height
+ROI_bottom = 900  # height 1000
 ROI_right = 100
-ROI_left = 750  # width
+ROI_left = 700  # width 750
 
 
 def text_to_polly_sound(input_text):
@@ -95,7 +95,7 @@ while True:
 
         cal_accum_avg(gray_frame, accumulated_weight)
 
-        cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT!", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
+        cv2.putText(frame_copy, "FETCHING BACKGROUND...PLEASE WAIT", (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
                     (0, 0, 255), 2)
 
     else:
@@ -111,9 +111,9 @@ while True:
             cv2.drawContours(frame_copy, [hand_segment + (ROI_right, ROI_top)], -1, (255, 0, 0), 1)
 
             # (white / black)
-            named_window = "Thesholded Hand Image-B/W"
+            named_window = "Threshold Hand Image-B/W"
             cv2.namedWindow(named_window)
-            cv2.moveWindow(named_window, 850, 80)
+            cv2.moveWindow(named_window, 850, 120)
             cv2.imshow(named_window, thresholded)
 
             thresholded = cv2.resize(thresholded, (64, 64))
@@ -125,14 +125,14 @@ while True:
             # print(pred)
             x_axis = pred[0]
             if len(x_axis) > 0 and x_axis[np.argmax(x_axis)] >= PREDICTION_THRESHOLD:
-                cv2.putText(frame_copy, "PREDICTED GESTURE: " + word_dict[np.argmax(pred)], (60, 80),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+                cv2.putText(frame_copy, "Recognized => " + word_dict[np.argmax(pred)], (60, 80),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 64, 0), 2)
                 predicted_gest = word_dict[np.argmax(pred)]
                 # k = cv2.waitKey(50)
                 pygame.event.pump()
                 keys = pygame.key.get_pressed()
                 if keys[K_SPACE]:
-                    print("predicted gesture: " + predicted_gest)
+                    print("recognized gesture: " + predicted_gest)
                     # call to the polly
                     if not is_voiceless:
                         text_to_polly_sound(predicted_gest)
@@ -155,7 +155,7 @@ while True:
 
     # Display the frame with segmented hand
 
-    cv2.putText(frame_copy, "Hand sign recognition_ _ _", (10, 20), cv2.FONT_ITALIC, 0.7, (51, 255, 51), 1)
+    cv2.putText(frame_copy, "Hand sign recognition...", (10, 20), cv2.FONT_ITALIC, 0.7, (28, 229, 28), 1)
     cv2.imshow("Sign Detection", frame_copy)
 
     # Close windows with Esc

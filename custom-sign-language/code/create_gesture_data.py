@@ -7,15 +7,15 @@ background = None
 accumulated_weight = 0.5
 
 # current gesture to be generated
-#element = 0
+# element = 0
 # num_frames = 0
 # num_imgs_taken = 0
 
 
 ROI_top = 100
-ROI_bottom = 1000 #height
+ROI_bottom = 1000  # height
 ROI_right = 100
-ROI_left = 750 #width
+ROI_left = 750  # width
 
 
 def cal_accum_avg(frame, accumulated_weight):
@@ -49,7 +49,8 @@ def segment_hand(frame, threshold=25):
 
 def init(argv):
     if len(argv) == 0:
-        raise getopt.GetoptError("Invalid input, must be: create_gesture_data.py -i <image id= 0,1,2,...> -g <train/test>")
+        raise getopt.GetoptError(
+            "Invalid input, must be: create_gesture_data.py -i <image id= 0,1,2,...> -g <train/test>")
     try:
         opts, args = getopt.getopt(argv, "i:g:")
     except getopt.GetoptError:
@@ -64,7 +65,7 @@ def init(argv):
             group = arg
         else:
             sys.exit(-1)
-    return (element,group)
+    return (element, group)
 
 
 def generate_gestures(argv):
@@ -107,14 +108,20 @@ def generate_gestures(argv):
             if hand is not None:
                 thresholded, hand_segment = hand
 
+                # (white / black)
+                named_window = "Threshold Hand Image-B/W"
+                cv2.namedWindow(named_window)
+                cv2.moveWindow(named_window, 850, 120)
+
                 # Draw contours around hand segment
                 cv2.drawContours(frame_copy, [hand_segment + (ROI_right, ROI_top)], -1, (255, 0, 0), 1)
 
-                cv2.putText(frame_copy, str(num_frames) + "For gesture" + str(element), (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                cv2.putText(frame_copy, str(num_frames) + "For gesture" + str(element), (60, 80),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1,
                             (0, 0, 255), 2)
 
                 # Also display the thresholded image
-                cv2.imshow("Thresholded Hand Image=>", thresholded)
+                cv2.imshow(named_window, thresholded)
 
         else:
 
@@ -136,21 +143,20 @@ def generate_gestures(argv):
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
                 # Displaying the thresholded image
-                cv2.imshow("***Taking hresholded Hand Image***", thresholded)
-                if num_imgs_taken <= 400:
-                    # cv2.imwrite(r"D:\\gesture\\train\\"+str(element)+"\\" + str(num_imgs_taken+300) + '.jpg', thresholded)
-                    # cv2.imwrite(r"D:\\gesture\\x"+"\\" + str(num_imgs_taken) + '.jpg', thresholded)
-                    cv2.imwrite(r"../images/" + group + "/" + str(element) + "/gesture" + str(time.time()) + '.jpg', thresholded)
+                cv2.imshow("***Taking threshold Hand Image***", thresholded)
+                if num_imgs_taken <= 300:
+                    cv2.imwrite(r"../images/" + group + "/" + str(element) + "/gesture" + str(time.time()) + '.jpg',
+                                thresholded)
                 else:
                     break
                 num_imgs_taken += 1
             else:
-                cv2.putText(frame_copy, 'No hand detected...', (60,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                cv2.putText(frame_copy, 'No hand detected...', (60, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         # Drawing ROI on frame copy
-        cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255, 255, 0), 3)
+        cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255, 128, 0), 3)
 
-        cv2.putText(frame_copy, "DataFlair hand sign recognition_ _ _", (10, 20), cv2.FONT_ITALIC, 0.5, (51, 255, 51),
+        cv2.putText(frame_copy, "Hand sign recognition...", (10, 20), cv2.FONT_ITALIC, 0.5, (51, 81, 51),
                     1)
 
         # increment the number of frames for tracking
@@ -173,4 +179,3 @@ def generate_gestures(argv):
 
 if __name__ == "__main__":
     generate_gestures(sys.argv[1:])
-

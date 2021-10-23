@@ -80,7 +80,7 @@ tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 
 #history2 = model.fit(train_batches, epochs=50, callbacks=[reduce_lr, early_stop,tensorboard],  validation_data = test_batches)#, checkpoint])
-history2 = model.fit(train_batches, epochs=4, callbacks=[reduce_lr,tensorboard],  validation_data = test_batches)#, checkpoint])
+history2 = model.fit(train_batches, epochs=6, callbacks=[reduce_lr,tensorboard],  validation_data = test_batches)#, checkpoint])
 imgs, labels = next(train_batches) # For getting next batch of imgs...
 
 imgs, labels = next(test_batches) # For getting next batch of imgs...
