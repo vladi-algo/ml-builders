@@ -124,10 +124,12 @@ while True:
             # print(pred)
             x_axis = pred[0]
             if len(x_axis) > 0 and x_axis[np.argmax(x_axis)] >= PREDICTION_THRESHOLD:
-                cv2.putText(frame_copy, "Recognized => " + word_dict[np.argmax(pred)], (60, 80),
+                cv2.putText(frame_copy, "=> " + word_dict[np.argmax(pred)], (60, 80),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 64, 0), 2)
                 predicted_gest = word_dict[np.argmax(pred)]
                 # k = cv2.waitKey(50)
+                '''
+                #pressing button send to polly 
                 pygame.event.pump()
                 keys = pygame.key.get_pressed()
                 if keys[K_SPACE]:
@@ -136,7 +138,7 @@ while True:
                     if not is_voiceless:
                         text_to_polly_sound(predicted_gest)
                         is_voiceless = True
-        '''
+               '''
         else:
             print("PAUSE! GEST IS FINE")
             print("last predicted gest: " + predicted_gest)
@@ -144,7 +146,7 @@ while True:
             if not is_voiceless:
                 text_to_polly_sound(predicted_gest)
                 is_voiceless = True
-        '''
+
 
     # Draw ROI on frame_copy
     cv2.rectangle(frame_copy, (ROI_left, ROI_top), (ROI_right, ROI_bottom), (255, 128, 0), 3)
