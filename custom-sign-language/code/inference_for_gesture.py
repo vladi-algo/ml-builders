@@ -127,7 +127,7 @@ while True:
                 cv2.putText(frame_copy, "=> " + word_dict[np.argmax(pred)], (60, 80),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 64, 0), 2)
                 predicted_gest = word_dict[np.argmax(pred)]
-                # k = cv2.waitKey(50)
+                k = cv2.waitKey(100)
                 '''
                 #pressing button send to polly 
                 pygame.event.pump()
@@ -142,6 +142,7 @@ while True:
         else:
             print("PAUSE! GEST IS FINE")
             print("last predicted gest: " + predicted_gest)
+            print(str(is_voiceless))
             # call to the polly
             if not is_voiceless:
                 text_to_polly_sound(predicted_gest)
