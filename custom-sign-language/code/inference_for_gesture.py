@@ -1,4 +1,4 @@
-from utils.definitions import word_dict, PREDICTION_THRESHOLD
+from utils.definitions import word_dict, agent_dict, PREDICTION_THRESHOLD
 import numpy as np
 import cv2
 # import keras
@@ -14,7 +14,7 @@ from pygame.locals import *
 
 model = models.load_model(r"../model/best_model_custom_gestures.h5")
 polly_client = boto3.client('polly')
-# pygame.mixer.pre_init(devicename="BlackHole 16ch")
+pygame.mixer.pre_init(devicename="BlackHole 16ch")
 # pygame.mixer.pre_init(devicename="BlackHole 16ch")
 pygame.mixer.init()
 
@@ -71,7 +71,7 @@ def segment_hand(frame, threshold=25):
         return (thresholded, hand_segment_max_cont)
 
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(1)
 num_frames = 0
 predicted_gest = ""
 is_voiceless = False
@@ -121,13 +121,15 @@ while True:
 
             pred = model.predict(thresholded)
             # print all predictions per gesture
-            # print(pred)
+            print(pred)
             x_axis = pred[0]
             if len(x_axis) > 0 and x_axis[np.argmax(x_axis)] >= PREDICTION_THRESHOLD:
-                cv2.putText(frame_copy, "=> " + word_dict[np.argmax(pred)], (60, 80),
+                cv2.putText(frame_copy, "Detected => " + word_dict[np.argmax(pred)] + ". [" + str(x_axis[np.argmax(x_axis)]) + "]", (50, 70),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 64, 0), 2)
+
                 predicted_gest = word_dict[np.argmax(pred)]
-                k = cv2.waitKey(100)
+                #slow down frames rate in 100 milliseconds
+                k = cv2.waitKey(150)
                 '''
                 #pressing button send to polly 
                 pygame.event.pump()
