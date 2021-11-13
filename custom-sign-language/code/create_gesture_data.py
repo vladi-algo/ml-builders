@@ -78,7 +78,7 @@ def generate_gestures(argv):
     element, group = init(argv)
 
     print(f'Generating images for image {element}, group {group} ...')
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(1)
     num_frames = 0
     num_imgs_taken = 0
 
